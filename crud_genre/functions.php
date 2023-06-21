@@ -54,7 +54,7 @@
  }
 
 
- function Ovz3dplus(){
+ function Ovzgenre(){
 
     // Haal alle genre record uit de tabel 
     $result = GetData("genre");
@@ -96,7 +96,7 @@ function PrintTable($result){
 }
 
 
-function Crud3dplus(){
+function Crudgenre(){
 
     // Menu-item   insert
     $txt = "
@@ -140,10 +140,10 @@ function PrintCrudgenre($result){
         }
         
         // Wijzig knopje
-        $table .= "<td>". 
-            "<form method='post' action='update_genre.php?genreid=$row[genreid]' >       
-                    <button name='wzg'>Wzg</button>	 
-            </form>" . "</td>";
+    $table .= "<td>". 
+        "<form method='post' action='update_genre.php?genreid=$row[genreid]' >       
+            <button name='wzg'>Wzg</button>	 
+        </form>" . "</td>";
 
         // Delete via linkje href
         $table .= '<td><a href="delete_genre.php?genreid='.$row["genreid"].'">verwijder</a></td>';
@@ -165,8 +165,7 @@ function Updategenre($row){
         // Update data uit de opgegeven table methode prepare
         $sql = "UPDATE genre
         SET 
-            genrenaam = '$row[genrenaam]', 
-            genre id = '$row[genreid]', 
+            genrenaam = '$row[genrenaam]'
         WHERE genreid = $row[genreid]";
         
         $query = $conn->prepare($sql);
@@ -183,25 +182,30 @@ function Insertgenre($post){
     try {
         $conn = ConnectDb();
 
-        
+        // Get the maximum genre ID from the database
+        $query = $conn->prepare("SELECT MAX(genreid) as max_genreid FROM genre");
+        $query->execute();
+        $result = $query->fetch();
+        $maxGenreID = $result['max_genreid'];
+
+        // Increment the maximum genre ID by 1 to get the new ID
+        $newGenreID = $maxGenreID + 1;
+
         $query = $conn->prepare("
-        INSERT INTO genre (genrenaam, genreid) 
-        VALUES (:genrenaam, :genreid)");
+        INSERT INTO genre (genreid, genrenaam) 
+        VALUES (:genreid, :genrenaam)");
 
-        //Oplossing 2
-        $query->execute(
-            [
-                ':genrenaam'=>$post['genrenaam'],
-                ':genre id'=>$post['genreid']
-            ]
-        );
-    }
+        // Bind the genre ID and genre name to the query parameters
+        $query->bindParam(':genreid', $newGenreID);
+        $query->bindParam(':genrenaam', $post['genrenaam']);
 
-    catch(PDOException $e) {
+        $query->execute();
+        echo '<script>alert("genrenaam: ' . $post['genrenaam'] . ' is toegevoegd")</script>';
+    } catch(PDOException $e) {
         echo "Insert failed: " . $e->getMessage();
-
     }
 }
+
 
 function Deletegenre($genreid){
     echo "Delete row<br>";
@@ -223,29 +227,6 @@ function Deletegenre($genreid){
 
     }
 }
-
-function dropDowngenre($label, $row_selected){
-    $data = GetData('genre');
-    $txt = "
-    <label for='$label'>Choose a $label:</label>
-        <select name='$label' id='$label'>";
-
-    foreach($data as $row){
-        if ($row['genreid'] == $row_selected){
-            $txt .= "<option value='$row[genreid]' selected='selected'>$row[genrenaam]</option>\n";
-        } else {
-            $txt .= "<option value='$row[genreid]'>$row[genrenaam]</option>\n";
-        }
-        
-    }
-
-    $txt .= "</select>";
-
-    echo $txt;
-    
-}
-
-
 
 
 ?>

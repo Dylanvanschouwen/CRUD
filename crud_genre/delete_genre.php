@@ -1,7 +1,7 @@
 <?php
-// auteur: Emre Bas
+// auteur: Dylan
 // functie: verwijder een genre op basis van de genreid
-include 'function.crud.php';
+include 'functions.php';
 
 // Haal genre uit de database
 if(isset($_GET['genreid'])){
@@ -11,3 +11,4 @@ if(isset($_GET['genreid'])){
     echo "<script> location.replace('crud_genre.php'); </script>";
 }
 ?>
+

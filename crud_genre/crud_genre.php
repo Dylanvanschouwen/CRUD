@@ -6,9 +6,7 @@
 include 'functions.php';
 
 // Main
-
-// Print crud
-Crud3dplus();
+Crudgenre();
 
 
 ?>

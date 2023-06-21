@@ -2,14 +2,9 @@
     echo "<h1>Insert genre</h1>";
 
     require_once('functions.php');
-	 
-	 
 
-    // Test of er op de insert-knop is gedrukt 
     if(isset($_POST) && isset($_POST['btn_ins'])){
-		 
         Insertgenre($_POST);
-        echo '<script>alert("genrenaam: ' . $_POST['genrenaam'] . ' is toegevoegd")</script>';
     }
 ?>
 
@@ -17,8 +12,7 @@
     <body>
         <form method="post">
         <br>
-        genre naam:<input type="" name="genrenaam"><br> 
-        Genre ID: <input type="text" name="genreid"><br>      
+        genrenaam:<input type="text" name="genrenaam"><br> 
         <br>
         <input type="submit" name="btn_ins" value="Insert"><br>
         </form>
